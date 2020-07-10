@@ -1,5 +1,5 @@
 # Blazor-Standalone-GraphAPI-Simple-Me-Demo
-Shows how to access Microsoft Graph API using c# SDK with little configuration.
+Shows how to access Microsoft Graph API using both Restful Http Client and C# SDK with little configuration.
 
 
 ## Need to know first ##
