@@ -42,7 +42,7 @@ The settings was stored in ```wwwroot/appsettings.json```. There is no secret so
 
 
 
-### Configure DI in Program,cs   ###
+### Configure DI in Program.cs   ###
 
 ``` csharp
 builder.Services.AddTransient<MSGraphAuthorizationMessageHandler>();
