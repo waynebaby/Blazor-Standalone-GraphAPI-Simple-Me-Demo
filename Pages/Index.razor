@@ -1,0 +1,66 @@
+﻿@page "/"
+
+@inject IHttpClientFactory httpFactory;
+
+
+<h1>Blazor Graph API and C# SDK Demo </h1>
+<AuthorizeView>
+    <Authorized>
+        <h3> Hello, @context.User.Identity.Name!  Now you can access your graph api easily with both Restful API and C# SDK!</h3>
+
+
+        <p><button @onclick="GraphAPICall">Graph Restful API Call</button></p>
+        <p><button @onclick="GraphSDKCall">Graph C# SDK Call</button></p>
+
+        <textarea style="width:100%;" rows="10">@executionResult</textarea>
+    </Authorized>
+    <NotAuthorized>
+        <h3> Hello, Stranger! you need <a href="authentication/login">Log in</a> first</h3>
+ 
+    </NotAuthorized>
+</AuthorizeView>
+
+@code{
+    string executionResult;
+    async Task GraphAPICall()
+    {
+        try
+        {
+            using (var http = httpFactory.CreateClient("MSGraph"))
+            {
+
+                var s = await http.GetStringAsync("v1.0/me");
+                executionResult = $@"Graph API Fetched:
+{s}";
+            }
+        }
+        catch (Exception ex)
+        {
+            executionResult = ex.ToString();
+        }
+    }
+
+
+    async Task GraphSDKCall()
+    {
+        try
+        {
+            using (var http = httpFactory.CreateClient("MSGraph"))
+            {
+                Microsoft.Graph.GraphServiceClient graphClient = new Microsoft.Graph.GraphServiceClient(http) { AuthenticationProvider = new Microsoft.Graph.DelegateAuthenticationProvider(e => Task.CompletedTask) };
+                var user = await graphClient.Me
+                    .Request()
+                    .GetAsync();
+                executionResult = $@"Graph SDK Fetched:
+{user.DisplayName},
+{user.Mail},
+{user.MailNickname}";
+            }
+        }
+        catch (Exception ex)
+        {
+            executionResult = ex.ToString();
+        }
+    }
+}
+
